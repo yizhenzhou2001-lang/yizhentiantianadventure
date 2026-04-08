@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:transparent}
+#phone{max-width:390px;margin:0 auto;background:#f7f0ff;border-radius:40px;overflow:hidden;border:3px solid #d8c8f0}
+.hdr{background:#e8d8f8;padding:13px 16px 11px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #d4c0ec}
+.hdr-left{display:flex;align-items:center;gap:10px}
+.hdr-avatar{width:46px;height:46px;border-radius:50%;border:2.5px solid #d0b8f0;overflow:hidden;background:#fde8f8;flex-shrink:0}
+.hdr-avatar img{width:100%;height:100%;object-fit:cover;object-position:top}
+.hdr-name{font-size:14px;font-weight:900;color:#5a3080}
+.hdr-day{font-size:10px;color:#9070b0;font-weight:700}
+.pill{background:rgba(255,255,255,.78);border:1.5px solid #d8c0f0;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:800;color:#5a3080;display:flex;align-items:center;gap:4px}
+
+.map-wrap{position:relative;height:230px;overflow:hidden;background:#000}
+.map-wrap svg{position:absolute;inset:0;width:100%;height:100%}
+.char-container{position:absolute;bottom:0;left:0;width:100%;display:flex;justify-content:center;align-items:flex-end;gap:0;pointer-events:none}
+.char-yizen{height:210px;width:auto;filter:drop-shadow(0 4px 8px rgba(0,0,0,.18));animation:charBob 2.2s ease-in-out infinite}
+.char-tiantian{height:100px;width:auto;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15));animation:charBob 2.2s ease-in-out infinite .4s;margin-left:-10px;margin-bottom:6px}
+@keyframes charBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+.strip{background:#fdf5ff;padding:10px 14px 8px;border-top:2px solid #e8d4f8}
+.sec-lbl{font-size:11px;font-weight:900;color:#7040a0;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.cscroll{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.cscroll::-webkit-scrollbar{display:none}
+.cbub{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.cring{width:60px;height:60px;border-radius:50%;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 2px 8px rgba(140,80,200,.18);overflow:hidden;background:#f8f0ff}
+.cring img{width:100%;height:100%;object-fit:contain;padding:4px}
+.cring.on::after{content:'';position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:#c060e8;border:2px solid #fff}
+.cring.lk{filter:grayscale(.7);opacity:.5}
+.cname{font-size:9px;font-weight:800;color:#7040a0;text-align:center;max-width:64px;line-height:1.2}
+
+.outfit-panel{background:#fdf5ff;padding:10px 14px 10px;border-top:2px solid #e8d4f8}
+.outfit-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.oitem{background:#fff;border-radius:12px;border:1.5px solid #e0d0f8;aspect-ratio:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .12s;position:relative;overflow:hidden}
+.oitem:hover{transform:scale(1.07)}
+.oitem img{width:88%;height:88%;object-fit:contain}
+.oitem.locked{opacity:.42;filter:grayscale(.5)}
+.olock{position:absolute;top:3px;right:3px;font-size:8px;background:#d8c0f0;border-radius:50%;width:15px;height:15px;display:flex;align-items:center;justify-content:center}
+
+.qsec{background:#fdf8ff;padding:10px 14px;border-top:2px solid #e8d4f8}
+.qhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.qtitle{font-size:12px;font-weight:900;color:#7040a0}
+.qbadge{background:#d8a8f8;color:#5a1890;border-radius:10px;padding:2px 9px;font-size:10px;font-weight:800}
+.qrow{display:flex;align-items:center;gap:10px;background:#fff8ff;border-radius:14px;padding:9px 11px;margin-bottom:7px;border:1.5px solid #e8d4f0;cursor:pointer;transition:transform .12s}
+.qrow:hover{transform:scale(1.01)}
+.qrow.done{opacity:.55}
+.qface{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.qbody{flex:1}
+.qname{font-size:12px;font-weight:800;color:#4a2870}
+.qsub{font-size:10px;color:#9070a8;margin-top:1px}
+.qprog{height:5px;background:#e8d8f0;border-radius:4px;margin-top:5px;overflow:hidden}
+.qpf{height:100%;border-radius:4px;transition:width .4s}
+.qgem{font-size:10px;font-weight:900;color:#b060d8;white-space:nowrap}
+
+.bnav{background:#fdf5ff;border-top:2px solid #e8d4f8;display:flex;padding:8px 0 14px}
+.bbn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:transparent;cursor:pointer;font-family:'Nunito',sans-serif}
+.bico{width:36px;height:36px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;background:#ede0f8;transition:background .15s}
+.bbn.on .bico{background:#c888f0}
+.blbl{font-size:9px;font-weight:800;color:#a880c0}
+.bbn.on .blbl{color:#6020a0}
+
+.mscrim{display:none;background:rgba(60,20,90,.4);padding:18px;align-items:center;justify-content:center;min-height:240px}
+.mscrim.show{display:flex}
+.mbox{background:#fdf8ff;border-radius:26px;padding:20px;max-width:320px;width:100%;border:2.5px solid #d8b8f8}
+.mart{display:flex;justify-content:center;margin-bottom:10px}
+.mart img{height:100px;object-fit:contain;filter:drop-shadow(0 3px 8px rgba(0,0,0,.15))}
+.mtitle{font-size:16px;font-weight:900;color:#4a2070;text-align:center;margin-bottom:5px}
+.msub{font-size:11px;color:#9070a8;text-align:center;line-height:1.5;margin-bottom:12px}
+.meff{background:#f5eeff;border-radius:12px;padding:9px 12px;margin-bottom:12px;border:1.5px solid #dcc8f8}
+.mefflbl{font-size:10px;font-weight:900;color:#8040c0;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px}
+.mefftxt{font-size:11px;color:#6030a0;line-height:1.5}
+.mreq{background:#fef0ff;border-radius:12px;padding:9px 12px;margin-bottom:12px;border:1.5px solid #f0c8f8;display:none}
+.mreqlbl{font-size:10px;font-weight:900;color:#a040b0;margin-bottom:5px}
+.rline{display:flex;align-items:center;gap:7px;padding:3px 0;font-size:11px;color:#7030a0}
+.mbtns{display:flex;gap:8px}
+.mbsec{flex:1;padding:9px;border-radius:12px;background:#ede0f8;border:none;cursor:pointer;font-size:12px;font-weight:700;color:#7040a0;font-family:'Nunito',sans-serif}
+.mbpri{flex:2;padding:9px;border-radius:12px;background:#b060e0;border:none;cursor:pointer;font-size:12px;font-weight:900;color:#fff;font-family:'Nunito',sans-serif}
+
+.tshell{position:relative;height:0;overflow:visible;z-index:50}
+.toast{position:absolute;top:-44px;left:50%;transform:translateX(-50%) translateY(-12px);background:#9040c8;color:#fff;border-radius:20px;padding:8px 18px;font-size:11px;font-weight:900;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .28s,transform .28s}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* ── diary & reward modals ── */
+.diary-date{font-size:12px;font-weight:800;color:#9060c0;text-align:center;margin-bottom:12px}
+.diary-card{background:#fff;border-radius:14px;border:1.5px solid #e4d0f8;padding:12px 14px;margin-bottom:10px}
+.diary-card-title{font-size:11px;font-weight:900;color:#7040a0;margin-bottom:6px}
+.diary-card-body{font-size:12px;color:#4a2070;line-height:1.6}
+.diary-mood{margin-top:7px;font-size:13px;font-weight:800;color:#a060d0}
+.diary-food-img{width:100%;border-radius:10px;object-fit:cover;margin-bottom:8px;max-height:160px}
+.diary-empty-item{font-size:11px;color:#b090c8;text-align:center;padding:8px 0}
+.diary-scroll{max-height:55vh;overflow-y:auto;padding-right:2px}
+.reward-img{width:140px;height:140px;object-fit:contain;display:block;margin:0 auto 14px;filter:drop-shadow(0 4px 16px rgba(160,80,220,.35))}
+.reward-title{font-size:17px;font-weight:900;color:#4a2070;text-align:center;margin-bottom:4px}
+.reward-sub{font-size:12px;color:#9060c0;text-align:center;margin-bottom:18px}
+/* ── diary checklist + submit ── */
+.chk-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #f0e8fb}
+.chk-row:last-child{border-bottom:none}
+.chk-ico{font-size:16px;width:22px;text-align:center}
+.chk-name{font-size:12px;font-weight:800;color:#4a2070;flex:1}
+.chk-status{font-size:14px}
+#diary-submit-btn:disabled{opacity:.4;cursor:not-allowed}
+/* ── calendar ── */
+.cal-hdr{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.cal-nav{background:#ede0f8;border:none;border-radius:8px;width:30px;height:30px;font-size:16px;cursor:pointer;color:#7040a0;font-weight:900;flex-shrink:0}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:9px;font-weight:800;color:#b090c8;margin-bottom:4px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;cursor:pointer;position:relative}
+.cal-day.other{color:#d0b8e8;cursor:default}
+.cal-day.today{background:#b060e0;color:#fff}
+.cal-day.past{background:#f5eeff;color:#6030a0}
+.cal-day.past:hover{background:#dcc8f8}
+.cal-day.has-rec::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#c060e8}
+.cal-day.future{color:#d0b8e8;cursor:default}
+/* ── meal tabs ── */
+.meal-tabs{display:flex;gap:6px;margin-bottom:12px}
+.meal-tab{flex:1;padding:7px 0;border-radius:10px;border:1.5px solid #d8b8f8;background:#f5eeff;font-size:11px;font-weight:800;color:#7040a0;cursor:pointer;transition:background .15s}
+.meal-tab.on{background:#b060e0;color:#fff;border-color:#b060e0}
+/* lip-on-map handled via JS transition */
+/* ── symptom & food modals ── */
+.rmodal-scrim{display:none;position:fixed;inset:0;background:rgba(60,20,90,.45);z-index:200;align-items:center;justify-content:center;padding:18px}
+.rmodal-scrim.show{display:flex}
+.rmodal-box{background:#fdf8ff;border-radius:24px;padding:22px 20px;width:100%;max-width:340px;border:2.5px solid #d8b8f8}
+.rmodal-title{font-size:15px;font-weight:900;color:#4a2070;text-align:center;margin-bottom:14px}
+.rmodal-label{font-size:11px;font-weight:800;color:#7040a0;margin-bottom:5px;display:block}
+.rmodal-textarea{width:100%;border:1.5px solid #d4b8f0;border-radius:12px;padding:10px 12px;font-size:12px;font-family:inherit;color:#3a1060;background:#fff;resize:none;outline:none;line-height:1.6}
+.rmodal-textarea:focus{border-color:#a060e0}
+.mood-row{display:flex;justify-content:space-between;margin:4px 0 14px}
+.mood-btn{font-size:24px;cursor:pointer;opacity:.35;transition:opacity .15s,transform .15s;border:none;background:none;padding:0}
+.mood-btn.sel{opacity:1;transform:scale(1.25)}
+.food-preview{width:100%;aspect-ratio:4/3;border-radius:14px;object-fit:cover;display:none;margin-bottom:12px;border:1.5px solid #d4b8f0}
+.cam-btn{width:100%;padding:11px;border-radius:14px;background:#f0e8ff;border:2px dashed #c090f0;cursor:pointer;font-size:13px;font-weight:800;color:#7040a0;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:6px}
+.rmodal-btns{display:flex;gap:8px;margin-top:4px}
+.rmbsec{flex:1;padding:9px;border-radius:12px;background:#ede0f8;border:none;cursor:pointer;font-size:12px;font-weight:700;color:#7040a0}
+.rmbpri{flex:2;padding:9px;border-radius:12px;background:#b060e0;border:none;cursor:pointer;font-size:12px;font-weight:900;color:#fff}
+</style>
+</head>
+<body>
+<div id="phone">
+
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="hdr-avatar">
+      <img id="avatar-img" src="./YiZhen-Original.png" alt="一針">
+    </div>
+    <div>
+      <div class="hdr-name">一針</div>
+      <div class="hdr-day">第 14 天 · 小魔女睡衣</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px">
+    <div class="pill">💎 <span id="gems">128</span></div>
+    <div class="pill">🔥 <span id="streak">5</span></div>
+  </div>
+</div>
+
+<div class="map-wrap">
+  <img src="./magic.PNG" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+  <img id="lip-on-map" src="./lip.png" style="position:absolute;display:none;width:56px;pointer-events:none;z-index:10;transition:top 1.1s cubic-bezier(.34,1.56,.64,1),transform 1.1s cubic-bezier(.34,1.56,.64,1)">
+  <div class="char-container">
+    <img class="char-yizen" id="yizen-main" src="./YiZhen-Original.png">
+    <img class="char-tiantian" id="tiantian-main" src="./TianTian-Original.png">
+  </div>
+</div>
+
+<div class="tshell"><div class="toast" id="toast"></div></div>
+
+<div class="strip">
+  <div class="sec-lbl">夥伴們</div>
+  <div class="cscroll" id="clist"></div>
+</div>
+
+<div class="outfit-panel">
+  <div class="sec-lbl">外觀收藏</div>
+  <div class="outfit-grid" id="outfit-grid"></div>
+</div>
+
+<div class="qsec">
+  <div class="qhdr">
+    <div class="qtitle">今日任務</div>
+    <div class="qbadge" id="qbadge">0/5 完成</div>
+  </div>
+  <div id="qlist"></div>
+</div>
+
+<div class="bnav">
+  <button class="bbn on" id="bn-map"><div class="bico">🗺️</div><div class="blbl">地圖</div></button>
+  <button class="bbn" id="bn-outfit"><div class="bico">👗</div><div class="blbl">外觀</div></button>
+  <button class="bbn" id="bn-garden"><div class="bico">🌸</div><div class="blbl">花園</div></button>
+  <button class="bbn" id="bn-diary"><div class="bico">📖</div><div class="blbl">日記</div></button>
+</div>
+
+<div class="mscrim" id="modal">
+  <div class="mbox">
+    <div class="mart"><img id="m-img" src="" alt=""></div>
+    <div class="mtitle" id="mtitle"></div>
+    <div class="msub" id="msub"></div>
+    <div class="meff"><div class="mefflbl">✨ 效果</div><div class="mefftxt" id="mefftxt"></div></div>
+    <div class="mreq" id="mreq"><div class="mreqlbl">🔓 解鎖條件</div><div id="mreqlines"></div></div>
+    <div class="mbtns">
+      <button class="mbsec" onclick="closeModal()">關閉</button>
+      <button class="mbpri" id="maction">好的！</button>
+    </div>
+  </div>
+</div>
+
+<!-- 日記回顧 modal -->
+<div class="rmodal-scrim" id="diary-modal">
+  <div class="rmodal-box">
+    <div style="display:flex;align-items:center;margin-bottom:12px">
+      <button class="cal-nav" onclick="closeRModal('diary-modal')" style="font-size:18px">←</button>
+      <div class="rmodal-title" style="flex:1;margin:0;text-align:center">📖 今日日記</div>
+    </div>
+    <div id="diary-checklist" style="margin-bottom:12px"></div>
+    <div class="diary-scroll" id="diary-content"></div>
+    <div style="display:flex;gap:6px;margin-top:10px">
+      <button class="rmbsec" onclick="clearTodayRecords()" style="flex:1">清空</button>
+      <button class="rmbsec" onclick="openCalendar()" style="flex:1">📅</button>
+      <button class="rmbsec" onclick="shareDiary()" style="flex:1">📤 傳訊息</button>
+    </div>
+    <div style="margin-top:6px">
+      <button class="rmbpri" id="diary-submit-btn" onclick="submitDiary()" style="width:100%">送出日記 📮</button>
+    </div>
+  </div>
+</div>
+
+<!-- 獎勵彈窗 -->
+<div class="rmodal-scrim" id="reward-modal">
+  <div class="rmodal-box" style="text-align:center">
+    <div class="rmodal-title">🎁 今日獎賞</div>
+    <img src="./lip.png" class="reward-img" alt="魔法口紅">
+    <div class="reward-title">✨ 魔法口紅</div>
+    <div class="reward-sub">辛苦了！這是今天的小獎勵 🌸</div>
+    <button class="rmbpri" style="width:100%" onclick="collectReward()">收下！💖</button>
+  </div>
+</div>
+
+<!-- 日曆 modal -->
+<div class="rmodal-scrim" id="cal-modal">
+  <div class="rmodal-box">
+    <div class="cal-hdr">
+      <button class="cal-nav" onclick="shiftMonth(-1)">‹</button>
+      <div class="rmodal-title" id="cal-title" style="margin:0;flex:1;text-align:center"></div>
+      <button class="cal-nav" onclick="shiftMonth(1)">›</button>
+    </div>
+    <div class="cal-weekdays">
+      <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="rmodal-btns" style="margin-top:12px">
+      <button class="rmbsec" style="width:100%" onclick="closeRModal('cal-modal')">關閉</button>
+    </div>
+  </div>
+</div>
+
+<!-- 補填 modal -->
+<div class="rmodal-scrim" id="backfill-modal">
+  <div class="rmodal-box">
+    <div class="rmodal-title" id="bf-title">📝 補填紀錄</div>
+    <label class="rmodal-label">身體狀況</label>
+    <textarea class="rmodal-textarea" id="bf-symptom" rows="3" placeholder="那天的身體狀況…"></textarea>
+    <label class="rmodal-label" style="margin-top:10px">心情指數</label>
+    <div class="mood-row" id="bf-mood-row">
+      <button class="mood-btn" data-src="bf" data-v="1">😞</button>
+      <button class="mood-btn" data-src="bf" data-v="2">😕</button>
+      <button class="mood-btn" data-src="bf" data-v="3">😐</button>
+      <button class="mood-btn" data-src="bf" data-v="4">🙂</button>
+      <button class="mood-btn" data-src="bf" data-v="5">😄</button>
+    </div>
+    <label class="rmodal-label" style="margin-top:10px">飲食備註</label>
+    <textarea class="rmodal-textarea" id="bf-food" rows="2" placeholder="那天吃了什麼…"></textarea>
+    <div class="rmodal-btns" style="margin-top:12px">
+      <button class="rmbsec" onclick="closeRModal('backfill-modal')">取消</button>
+      <button class="rmbpri" onclick="submitBackfill()">儲存 ✅</button>
+    </div>
+  </div>
+</div>
+
+<!-- 症狀記錄 modal -->
+<div class="rmodal-scrim" id="symptom-modal">
+  <div class="rmodal-box">
+    <div class="rmodal-title">📝 記錄今日症狀</div>
+    <label class="rmodal-label">身體狀況描述</label>
+    <textarea class="rmodal-textarea" id="symptom-text" rows="4" placeholder="例如：今天頭有點痛，下午開始好一些…"></textarea>
+    <label class="rmodal-label" style="margin-top:12px">今日心情指數</label>
+    <div class="mood-row" id="mood-row">
+      <button class="mood-btn" data-v="1">😞</button>
+      <button class="mood-btn" data-v="2">😕</button>
+      <button class="mood-btn" data-v="3">😐</button>
+      <button class="mood-btn" data-v="4">🙂</button>
+      <button class="mood-btn" data-v="5">😄</button>
+    </div>
+    <div class="rmodal-btns">
+      <button class="rmbsec" onclick="closeRModal('symptom-modal')">取消</button>
+      <button class="rmbpri" onclick="submitSymptom()">完成記錄 ✅</button>
+    </div>
+  </div>
+</div>
+
+<!-- 飲食記錄 modal -->
+<div class="rmodal-scrim" id="food-modal">
+  <div class="rmodal-box">
+    <div class="rmodal-title">🥗 飲食日記</div>
+    <div class="meal-tabs">
+      <button class="meal-tab on" data-meal="breakfast" onclick="switchMeal('breakfast',this)">🌅 早餐</button>
+      <button class="meal-tab" data-meal="lunch" onclick="switchMeal('lunch',this)">☀️ 午餐</button>
+      <button class="meal-tab" data-meal="dinner" onclick="switchMeal('dinner',this)">🌙 晚餐</button>
+    </div>
+    <div class="meal-section" id="meal-breakfast">
+      <img class="food-preview" id="prev-breakfast" src="" alt="早餐照片">
+      <label class="cam-btn" for="inp-breakfast">📷 拍照 / 選取早餐照片</label>
+      <input type="file" id="inp-breakfast" data-meal="breakfast" accept="image/*" capture="environment" style="display:none">
+      <textarea class="rmodal-textarea" id="note-breakfast" rows="2" placeholder="早餐吃了什麼…"></textarea>
+    </div>
+    <div class="meal-section" id="meal-lunch" style="display:none">
+      <img class="food-preview" id="prev-lunch" src="" alt="午餐照片">
+      <label class="cam-btn" for="inp-lunch">📷 拍照 / 選取午餐照片</label>
+      <input type="file" id="inp-lunch" data-meal="lunch" accept="image/*" capture="environment" style="display:none">
+      <textarea class="rmodal-textarea" id="note-lunch" rows="2" placeholder="午餐吃了什麼…"></textarea>
+    </div>
+    <div class="meal-section" id="meal-dinner" style="display:none">
+      <img class="food-preview" id="prev-dinner" src="" alt="晚餐照片">
+      <label class="cam-btn" for="inp-dinner">📷 拍照 / 選取晚餐照片</label>
+      <input type="file" id="inp-dinner" data-meal="dinner" accept="image/*" capture="environment" style="display:none">
+      <textarea class="rmodal-textarea" id="note-dinner" rows="2" placeholder="晚餐吃了什麼…"></textarea>
+    </div>
+    <div class="rmodal-btns" style="margin-top:12px">
+      <button class="rmbsec" onclick="closeRModal('food-modal')">取消</button>
+      <button class="rmbpri" onclick="submitFood()">完成記錄 ✅</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const S={gems:128,streak:5,done:[],symptomText:'',moodVal:0,meals:{breakfast:{photo:'',note:''},lunch:{photo:'',note:''},dinner:{photo:'',note:''}},rewardClaimed:false,submitted:false,history:{}};
+const PYJAMA="./YiZhen-Original.png";
+const FOREST="./Gemini_Generated_Image_9zzurk9zzurk9zzu_2-removebg-preview.png";
+const CAT_BASIC="./TianTian-Original.png";
+const CAT_PILOT="./TianTian_captain.png";
+
+const COMPS=[
+  {id:'tiantian',name:'天天',role:'初始布偶貓',img:CAT_BASIC,col:'#f0e8dc',on:true,lk:false,
+    eff:'一直陪在你身邊，心情值每天 +10。天天的藍眼睛說：你今天也很勇敢。',req:null},
+  {id:'pilot',name:'天天·星際機長',role:'升級外觀',img:CAT_PILOT,col:'#e8eef8',on:false,lk:true,
+    eff:'連續記錄 7 天解鎖！天天戴上飛行員帽，陪你飛越最困難的治療。',
+    req:[{t:'連續記錄病情 7 天',c:5,total:7,done:false}]},
+  {id:'nurse',name:'小欣護士',role:'治療加持 +20%',img:null,col:'#fce0ec',on:true,lk:false,
+    eff:'治療任務完成速度 +20%，自動提醒回診。',req:null},
+  {id:'family',name:'家人後援',role:'活力 +30/天',img:null,col:'#dce8fc',on:false,lk:true,
+    eff:'每天自動補充 +30 活力，社交任務獎勵翻倍。',
+    req:[{t:'完成 5 次社交任務',c:2,total:5,done:false},{t:'連續登入 7 天',c:7,total:7,done:true}]},
+];
+
+const OUTFITS=[
+  {icon:'sleepwear',img:PYJAMA,name:'小魔女睡衣',unlocked:true,task:null},
+  {icon:'forest',img:FOREST,name:'精靈森林戰裝',unlocked:false,task:'完成 10 次運動任務'},
+  {icon:'pilot',img:CAT_PILOT,name:'天天·星際機長',unlocked:false,task:'連續記錄 7 天'},
+  {icon:'bow',img:null,name:'粉蝴蝶結',unlocked:true,task:null},
+  {icon:'magic',img:null,name:'魔法學徒',unlocked:false,task:'解鎖 3 位夥伴'},
+  {icon:'rainbow',img:null,name:'彩虹披風',unlocked:false,task:'連續 14 天'},
+  {icon:'lucky',img:null,name:'幸運草套裝',unlocked:false,task:'完成所有成就'},
+  {icon:'star',img:null,name:'星光禮服',unlocked:false,task:'飲食任務 ×15'},
+];
+
+const QUESTS=[
+  {id:'q1',icon:'📝',bg:'#ede8ff',bar:'#a888e8',name:'記錄症狀',sub:'今日身體狀況記錄',prog:0,reward:35},
+  {id:'q2',icon:'🥗',bg:'#fff0d8',bar:'#e8a84a',name:'飲食日記',sub:'記錄今天吃了什麼',prog:60,reward:20},
+  {id:'q3',icon:'🚶',bg:'#e8f8e8',bar:'#78c878',name:'輕鬆散步',sub:'走路 10 分鐘',prog:100,reward:30},
+  {id:'q4',icon:'💧',bg:'#e0f0ff',bar:'#78b4e8',name:'補充水分',sub:'喝足 1500ml 水',prog:45,reward:20},
+  {id:'q5',icon:'😊',bg:'#fce8f8',bar:'#d878c8',name:'心情打卡',sub:'記錄今天的心情',prog:0,reward:25},
+];
+
+const OUTFIT_FALLBACK = ['🎀','🌿','✈️','🎀','✨','🌈','🍀','⭐'];
+
+function buildComps(){
+  document.getElementById('clist').innerHTML = COMPS.map(c=>{
+    const inner = c.img
+      ? `<img src="${c.img}" alt="${c.name}" style="width:100%;height:100%;object-fit:contain;padding:3px">`
+      : `<span style="font-size:22px">👤</span>`;
+    return `<div class="cbub" onclick="openComp('${c.id}')">
+      <div class="cring ${c.on?'on':''} ${c.lk?'lk':''}" style="background:${c.col}">${inner}</div>
+      <div class="cname">${c.name}<br><span style="font-weight:700;color:#b090c8;font-size:8px">${c.role}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function buildOutfits(){
+  document.getElementById('outfit-grid').innerHTML = OUTFITS.map((o,i)=>{
+    const inner = o.img
+      ? `<img src="${o.img}" alt="${o.name}">`
+      : `<span style="font-size:22px">${OUTFIT_FALLBACK[i]}</span>`;
+    return `<div class="oitem ${o.unlocked?'':'locked'}" onclick="outfitTap(${i})">
+      ${inner}
+      ${!o.unlocked?'<div class="olock">🔒</div>':''}
+    </div>`;
+  }).join('');
+}
+
+function outfitTap(i){
+  const o = OUTFITS[i];
+  if(o.unlocked){
+    document.getElementById('yizen-main').src = o.img || PYJAMA;
+    document.getElementById('avatar-img').src = o.img || PYJAMA;
+    showT(`✨ 換上「${o.name}」！`);
+  } else {
+    showT(`🔒 ${o.name}：${o.task}`);
+  }
+}
+
+function buildQuests(){
+  document.getElementById('qlist').innerHTML = QUESTS.map(q=>{
+    const done=S.done.includes(q.id)||q.prog>=100;
+    const p=done?100:q.prog;
+    return `<div class="qrow ${done?'done':''}" onclick="doQ('${q.id}',${q.reward})">
+      <div class="qface" style="background:${q.bg}">${q.icon}</div>
+      <div class="qbody">
+        <div class="qname">${q.name}</div>
+        <div class="qsub">${q.sub}</div>
+        <div class="qprog"><div class="qpf" style="width:${p}%;background:${q.bar}"></div></div>
+      </div>
+      <div class="qgem">${done?'✅':`+${q.reward}💎`}</div>
+    </div>`;
+  }).join('');
+  const d=QUESTS.filter(q=>S.done.includes(q.id)||q.prog>=100).length;
+  document.getElementById('qbadge').textContent=`${d}/${QUESTS.length} 完成`;
+}
+
+let _pendingQ=null;
+let _moodVal=0;
+
+function doQ(id,rew){
+  if(S.done.includes(id))return;
+  const q=QUESTS.find(x=>x.id===id);
+  if(q.prog>=100){S.done.push(id);buildQuests();return;}
+  if(id==='q1'){_pendingQ={id,rew};openSymptomModal();return;}
+  if(id==='q2'){_pendingQ={id,rew};openFoodModal();return;}
+  completeQ(id,rew,q);
+}
+
+function completeQ(id,rew,q){
+  if(!q)q=QUESTS.find(x=>x.id===id);
+  S.done.push(id);S.gems+=rew;
+  document.getElementById('gems').textContent=S.gems;
+  showT(`${q.icon} ${q.name}完成！+${rew} 💎`);
+  buildQuests();
+  if(S.done.length===3)setTimeout(()=>showT('🐾 天天呼嚕嚕～外觀解鎖進度 +1'),1500);
+}
+
+/* ── 症狀記錄 ── */
+function openSymptomModal(){
+  _moodVal=0;
+  document.getElementById('symptom-text').value='';
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('symptom-modal').classList.add('show');
+}
+
+function submitSymptom(){
+  const text=document.getElementById('symptom-text').value.trim();
+  if(!text){showT('請描述一下今天的狀況 💬');return;}
+  if(!_moodVal){showT('請選擇今日心情指數 😊');return;}
+  const moodLabels={1:'很差',2:'不太好',3:'普通',4:'不錯',5:'很棒！'};
+  S.symptomText=text;
+  S.moodVal=_moodVal;
+  closeRModal('symptom-modal');
+  showT(`📝 症狀已記錄！心情指數：${['😞','😕','😐','🙂','😄'][_moodVal-1]} ${moodLabels[_moodVal]}`);
+  completeQ(_pendingQ.id,_pendingQ.rew,null);
+  _pendingQ=null;
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('#mood-row .mood-btn').forEach(b=>{
+    b.addEventListener('click',()=>{
+      _moodVal=+b.dataset.v;
+      document.querySelectorAll('#mood-row .mood-btn').forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel');
+    });
+  });
+  document.querySelectorAll('#bf-mood-row .mood-btn').forEach(b=>{
+    b.addEventListener('click',()=>{
+      _bfMood=+b.dataset.v;
+      document.querySelectorAll('#bf-mood-row .mood-btn').forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel');
+    });
+  });
+
+  /* ── 飲食記錄 ── */
+  ['breakfast','lunch','dinner'].forEach(meal=>{
+    document.getElementById('inp-'+meal).addEventListener('change',e=>{
+      const file=e.target.files[0];
+      if(!file)return;
+      const prev=document.getElementById('prev-'+meal);
+      prev.src=URL.createObjectURL(file);
+      prev.style.display='block';
+    });
+  });
+});
+
+function switchMeal(meal,btn){
+  document.querySelectorAll('.meal-section').forEach(s=>s.style.display='none');
+  document.querySelectorAll('.meal-tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('meal-'+meal).style.display='block';
+  btn.classList.add('on');
+}
+
+function openFoodModal(){
+  ['breakfast','lunch','dinner'].forEach(meal=>{
+    const prev=document.getElementById('prev-'+meal);
+    prev.src=''; prev.style.display='none';
+    document.getElementById('inp-'+meal).value='';
+    document.getElementById('note-'+meal).value='';
+  });
+  switchMeal('breakfast',document.querySelector('.meal-tab[data-meal="breakfast"]'));
+  document.getElementById('food-modal').classList.add('show');
+}
+
+function submitFood(){
+  const anyPhoto=['breakfast','lunch','dinner'].some(m=>document.getElementById('prev-'+m).style.display==='block');
+  if(!anyPhoto){showT('請至少拍一張餐點照片 📷');return;}
+  ['breakfast','lunch','dinner'].forEach(meal=>{
+    const prev=document.getElementById('prev-'+meal);
+    S.meals[meal].photo=prev.style.display==='block'?prev.src:'';
+    S.meals[meal].note=document.getElementById('note-'+meal).value.trim();
+  });
+  closeRModal('food-modal');
+  showT('🥗 飲食日記已記錄！');
+  completeQ(_pendingQ.id,_pendingQ.rew,null);
+  _pendingQ=null;
+}
+
+function closeRModal(id){
+  document.getElementById(id).classList.remove('show');
+}
+
+function clearTodayRecords(){
+  S.symptomText=''; S.moodVal=0;
+  S.meals={breakfast:{photo:'',note:''},lunch:{photo:'',note:''},dinner:{photo:'',note:''}};
+  S.submitted=false;
+  S.done=[]; S.rewardClaimed=false;
+  closeRModal('diary-modal');
+  buildQuests();
+  showT('🗑️ 今日紀錄已清空');
+}
+
+function collectReward(){
+  closeRModal('reward-modal');
+  const map=document.querySelector('.map-wrap');
+  const el=document.getElementById('lip-on-map');
+  const x=Math.random()*(map.offsetWidth-65)+5;
+  const finalY=map.offsetHeight*0.3+Math.random()*(map.offsetHeight*0.35);
+  el.style.left=x+'px';
+  el.style.top='-80px';
+  el.style.transform='rotate(-18deg) scale(0.7)';
+  el.style.display='block';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    el.style.top=finalY+'px';
+    el.style.transform='rotate(6deg) scale(1)';
+  }));
+}
+
+function openComp(id){
+  const c=COMPS.find(x=>x.id===id);
+  const mimg = document.getElementById('m-img');
+  if(c.img){ mimg.src=c.img; mimg.style.display='block'; }
+  else{ mimg.style.display='none'; }
+  document.getElementById('mtitle').textContent=c.name;
+  document.getElementById('msub').textContent=c.lk?'繼續完成任務就能解鎖！':`${c.name} 正在陪著你。`;
+  document.getElementById('mefftxt').textContent=c.eff;
+  const req=document.getElementById('mreq');
+  if(c.lk&&c.req){
+    req.style.display='block';
+    document.getElementById('mreqlines').innerHTML=c.req.map(r=>`<div class="rline"><span style="font-size:13px">${r.done?'✅':'⭕'}</span>${r.t}（${r.c}/${r.total}）</div>`).join('');
+  } else req.style.display='none';
+  const btn=document.getElementById('maction');
+  btn.textContent=c.lk?'繼續努力 💪':`帶 ${c.name} 出隊！`;
+  btn.onclick=closeModal;
+  document.getElementById('modal').classList.add('show');
+}
+
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+
+let tt;
+function showT(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+document.querySelectorAll('.bbn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.bbn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    const msgs={['bn-outfit']:'👗 點外觀格子可換裝！','bn-garden':'🌸 花園：你的花正在盛開！'};
+    if(msgs[b.id])showT(msgs[b.id]);
+    if(b.id==='bn-diary')openDiary();
+  });
+});
+
+/* ── 日記 ── */
+const TASK_META=[
+  {id:'q1',icon:'📝',name:'症狀記錄'},
+  {id:'q2',icon:'🥗',name:'飲食日記'},
+  {id:'q3',icon:'🚶',name:'輕鬆散步'},
+  {id:'q4',icon:'💧',name:'補充水分'},
+  {id:'q5',icon:'😊',name:'心情打卡'},
+];
+
+function openDiary(){
+  const moodEmojis=['','😞','😕','😐','🙂','😄'];
+  const moodLabels=['','很差','不太好','普通','不錯','很棒！'];
+  const today=new Date().toLocaleDateString('zh-TW',{month:'long',day:'numeric',weekday:'short'});
+
+  // checklist
+  let chk='';
+  TASK_META.forEach(t=>{
+    const done=S.done.includes(t.id)||(t.id==='q1'&&S.symptomText)||(t.id==='q2'&&Object.values(S.meals).some(m=>m.photo));
+    chk+=`<div class="chk-row"><span class="chk-ico">${t.icon}</span><span class="chk-name">${t.name}</span><span class="chk-status">${done?'✅':'⭕'}</span></div>`;
+  });
+  document.getElementById('diary-checklist').innerHTML=chk;
+
+  // records
+  let html=`<div class="diary-date">📅 ${today}</div>`;
+  if(S.symptomText){
+    html+=`<div class="diary-card">
+      <div class="diary-card-title">📝 症狀記錄</div>
+      <div class="diary-card-body">${S.symptomText}</div>
+      ${S.moodVal?`<div class="diary-mood">${moodEmojis[S.moodVal]} 心情指數：${moodLabels[S.moodVal]}</div>`:''}
+    </div>`;
+  }
+  const mealLabels={breakfast:'🌅 早餐',lunch:'☀️ 午餐',dinner:'🌙 晚餐'};
+  const hasAnyMeal=Object.values(S.meals).some(m=>m.photo);
+  if(hasAnyMeal){
+    html+=`<div class="diary-card"><div class="diary-card-title">🥗 飲食日記</div>`;
+    ['breakfast','lunch','dinner'].forEach(meal=>{
+      const m=S.meals[meal];
+      if(m.photo){
+        html+=`<div style="margin-bottom:8px"><div class="diary-card-title" style="font-size:10px;margin-bottom:4px">${mealLabels[meal]}</div>
+        <img src="${m.photo}" class="diary-food-img">
+        ${m.note?`<div class="diary-card-body">${m.note}</div>`:''}
+        </div>`;
+      }
+    });
+    html+=`</div>`;
+  }
+  document.getElementById('diary-content').innerHTML=html;
+
+  // submit button state
+  const btn=document.getElementById('diary-submit-btn');
+  if(S.submitted){
+    btn.textContent='今日日記已送出 ✅'; btn.disabled=true;
+  } else {
+    btn.textContent='送出日記 📮'; btn.disabled=false;
+  }
+  document.getElementById('diary-modal').classList.add('show');
+}
+
+function submitDiary(){
+  if(S.submitted)return;
+  S.submitted=true;
+  closeRModal('diary-modal');
+  claimReward();
+}
+
+function claimReward(){
+  S.rewardClaimed=true;
+  document.getElementById('reward-modal').classList.add('show');
+}
+
+/* ── 日曆 ── */
+let _calYear=new Date().getFullYear();
+let _calMonth=new Date().getMonth();
+let _bfDate='';
+let _bfMood=0;
+
+function openCalendar(){
+  closeRModal('diary-modal');
+  _calYear=new Date().getFullYear();
+  _calMonth=new Date().getMonth();
+  renderCalendar();
+  document.getElementById('cal-modal').classList.add('show');
+}
+
+function shiftMonth(d){
+  _calMonth+=d;
+  if(_calMonth>11){_calMonth=0;_calYear++;}
+  if(_calMonth<0){_calMonth=11;_calYear--;}
+  renderCalendar();
+}
+
+function renderCalendar(){
+  const today=new Date();
+  const todayStr=today.toISOString().slice(0,10);
+  const firstDay=new Date(_calYear,_calMonth,1);
+  const daysInMonth=new Date(_calYear,_calMonth+1,0).getDate();
+  const startDow=firstDay.getDay();
+  const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  document.getElementById('cal-title').textContent=`${_calYear} ${months[_calMonth]}`;
+  let html='';
+  for(let i=0;i<startDow;i++) html+=`<div class="cal-day other"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=`${_calYear}-${String(_calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday=ds===todayStr;
+    const isPast=ds<todayStr;
+    const isFuture=ds>todayStr;
+    const hasRec=!!S.history[ds];
+    let cls='cal-day';
+    if(isToday) cls+=' today';
+    else if(isPast) cls+=' past';
+    else cls+=' future';
+    if(hasRec) cls+=' has-rec';
+    const click=isPast?`onclick="openBackfill('${ds}')"`:' ';
+    html+=`<div class="${cls}" ${click}>${d}</div>`;
+  }
+  document.getElementById('cal-grid').innerHTML=html;
+}
+
+function openBackfill(ds){
+  _bfDate=ds;_bfMood=0;
+  const rec=S.history[ds]||{};
+  const [y,m,d]=ds.split('-');
+  document.getElementById('bf-title').textContent=`📝 ${parseInt(m)}/${parseInt(d)} 補填`;
+  document.getElementById('bf-symptom').value=rec.symptom||'';
+  document.getElementById('bf-food').value=rec.food||'';
+  _bfMood=rec.mood||0;
+  document.querySelectorAll('#bf-mood-row .mood-btn').forEach(b=>{
+    b.classList.toggle('sel',+b.dataset.v===_bfMood);
+  });
+  closeRModal('cal-modal');
+  document.getElementById('backfill-modal').classList.add('show');
+}
+
+function submitBackfill(){
+  S.history[_bfDate]={
+    symptom:document.getElementById('bf-symptom').value.trim(),
+    food:document.getElementById('bf-food').value.trim(),
+    mood:_bfMood
+  };
+  closeRModal('backfill-modal');
+  showT('✅ 已儲存 '+_bfDate.slice(5).replace('-','/'));
+  openCalendar();
+}
+
+/* ── 傳訊息 ── */
+function shareDiary(){
+  const moodEmojis=['','😞','😕','😐','🙂','😄'];
+  const moodLabels=['','很差','不太好','普通','不錯','很棒！'];
+  const today=new Date().toLocaleDateString('zh-TW',{year:'numeric',month:'long',day:'numeric'});
+  const lines=[`📖 ${today} 健康日記`,``];
+  if(S.symptomText){
+    lines.push(`📝 症狀：${S.symptomText}`);
+    if(S.moodVal) lines.push(`${moodEmojis[S.moodVal]} 心情：${moodLabels[S.moodVal]}`);
+    lines.push('');
+  }
+  const mealNames={breakfast:'早餐',lunch:'午餐',dinner:'晚餐'};
+  ['breakfast','lunch','dinner'].forEach(meal=>{
+    const m=S.meals[meal];
+    if(m.note) lines.push(`🍽️ ${mealNames[meal]}：${m.note}`);
+  });
+  const taskLabels={q1:'症狀記錄',q2:'飲食日記',q3:'輕鬆散步',q4:'補充水分',q5:'心情打卡'};
+  const doneList=S.done.map(id=>taskLabels[id]).filter(Boolean);
+  if(doneList.length){ lines.push(''); lines.push('✅ 完成：'+doneList.join('、')); }
+  lines.push(''); lines.push('💎 累積寶石：'+S.gems);
+  const text=lines.join('\n');
+  if(navigator.share){
+    navigator.share({title:'今日健康日記',text}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(text).then(()=>showT('📋 已複製，請手動貼上傳送！'));
+  }
+}
+
+buildComps();buildOutfits();buildQuests();
+</script>
+</body>
+</html>
